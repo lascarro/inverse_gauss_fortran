@@ -1,0 +1,44 @@
+       SUBROUTINE C_INVMAT(MATRIZini,INVERSE,ntens)
+c      INVERSA DE UNA MATRIZ DE NTENS X NTENS usando el metodo de gauss
+c      Carlos Lascarro - 03/2020
+       integer ntens,i,j,diag
+       real*8 MATRIZ(ntens,ntens),INVERSE(ntens,ntens),x,
+     & MATRIZini(ntens,ntens)
+       MATRIZ=MATRIZini  ! 
+       INVERSE=0.0D0
+       do i=1,ntens
+       INVERSE(i,i)=1.0d0
+       enddo
+       diag=1
+       
+       do diag=1,ntens
+       do i=(diag+1),ntens
+       x=-MATRIZ(i,diag)/MATRIZ(diag,diag)
+       do j=1,ntens
+       MATRIZ(i,j)=MATRIZ(i,j)+x*MATRIZ(diag,j)
+       INVERSE(i,j)=INVERSE(i,j)+x*INVERSE(diag,j)
+       enddo
+       j=1
+       enddo
+       enddo
+       !orden inverso
+       do diag=ntens,1,-1 
+       do i=(diag-1),1,-1 
+       x=-MATRIZ(i,diag)/MATRIZ(diag,diag)
+       do j=1,ntens
+       MATRIZ(i,j)=MATRIZ(i,j)+x*MATRIZ(diag,j)
+       INVERSE(i,j)=INVERSE(i,j)+x*INVERSE(diag,j)
+       enddo
+       j=1
+       enddo
+       enddo
+       !diagonal
+       do i=1,ntens
+       do j=1,ntens
+       INVERSE(i,j)=INVERSE(i,j)/MATRIZ(i,i)
+       enddo
+       MATRIZ(i,i)=MATRIZ(i,i)/MATRIZ(i,i)
+       enddo
+              
+       
+       END SUBROUTINE C_INVMAT    
